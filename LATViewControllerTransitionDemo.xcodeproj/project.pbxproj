@@ -15,6 +15,8 @@
 		5463FB6F1D086A6700FC6064 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5463FB6D1D086A6700FC6064 /* LaunchScreen.storyboard */; };
 		5463FB7A1D086A6700FC6064 /* LATViewControllerTransitionDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5463FB791D086A6700FC6064 /* LATViewControllerTransitionDemoTests.m */; };
 		5463FB851D086A6700FC6064 /* LATViewControllerTransitionDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5463FB841D086A6700FC6064 /* LATViewControllerTransitionDemoUITests.m */; };
+		5463FB951D086A9500FC6064 /* UIViewController+LATTransitionCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5463FB941D086A9500FC6064 /* UIViewController+LATTransitionCategory.m */; };
+		5463FB981D086BBE00FC6064 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5463FB971D086BBE00FC6064 /* DetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,10 @@
 		5463FB801D086A6700FC6064 /* LATViewControllerTransitionDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LATViewControllerTransitionDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5463FB841D086A6700FC6064 /* LATViewControllerTransitionDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LATViewControllerTransitionDemoUITests.m; sourceTree = "<group>"; };
 		5463FB861D086A6700FC6064 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5463FB931D086A9500FC6064 /* UIViewController+LATTransitionCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LATTransitionCategory.h"; sourceTree = "<group>"; };
+		5463FB941D086A9500FC6064 /* UIViewController+LATTransitionCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LATTransitionCategory.m"; sourceTree = "<group>"; };
+		5463FB961D086BBE00FC6064 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		5463FB971D086BBE00FC6064 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +87,7 @@
 		5463FB531D086A6700FC6064 = {
 			isa = PBXGroup;
 			children = (
+				5463FB921D086A9500FC6064 /* UIViewController+LATTransitionCategory */,
 				5463FB5E1D086A6700FC6064 /* LATViewControllerTransitionDemo */,
 				5463FB781D086A6700FC6064 /* LATViewControllerTransitionDemoTests */,
 				5463FB831D086A6700FC6064 /* LATViewControllerTransitionDemoUITests */,
@@ -105,6 +112,8 @@
 				5463FB631D086A6700FC6064 /* AppDelegate.m */,
 				5463FB651D086A6700FC6064 /* ViewController.h */,
 				5463FB661D086A6700FC6064 /* ViewController.m */,
+				5463FB961D086BBE00FC6064 /* DetailViewController.h */,
+				5463FB971D086BBE00FC6064 /* DetailViewController.m */,
 				5463FB681D086A6700FC6064 /* Main.storyboard */,
 				5463FB6B1D086A6700FC6064 /* Assets.xcassets */,
 				5463FB6D1D086A6700FC6064 /* LaunchScreen.storyboard */,
@@ -138,6 +147,15 @@
 				5463FB861D086A6700FC6064 /* Info.plist */,
 			);
 			path = LATViewControllerTransitionDemoUITests;
+			sourceTree = "<group>";
+		};
+		5463FB921D086A9500FC6064 /* UIViewController+LATTransitionCategory */ = {
+			isa = PBXGroup;
+			children = (
+				5463FB931D086A9500FC6064 /* UIViewController+LATTransitionCategory.h */,
+				5463FB941D086A9500FC6064 /* UIViewController+LATTransitionCategory.m */,
+			);
+			path = "UIViewController+LATTransitionCategory";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +288,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5463FB981D086BBE00FC6064 /* DetailViewController.m in Sources */,
+				5463FB951D086A9500FC6064 /* UIViewController+LATTransitionCategory.m in Sources */,
 				5463FB671D086A6700FC6064 /* ViewController.m in Sources */,
 				5463FB641D086A6700FC6064 /* AppDelegate.m in Sources */,
 				5463FB611D086A6700FC6064 /* main.m in Sources */,
@@ -415,6 +435,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				INFOPLIST_FILE = LATViewControllerTransitionDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.luo.com.LATViewControllerTransitionDemo;
@@ -426,6 +447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				INFOPLIST_FILE = LATViewControllerTransitionDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.luo.com.LATViewControllerTransitionDemo;
