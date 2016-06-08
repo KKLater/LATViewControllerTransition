@@ -1,7 +1,7 @@
 
 //
 //  UIViewController+LATTrasitionCategory.m
-//  LATViewControllerTransitionDemo
+//  Git:https://github.com/KKLater/LATViewControllerTransition.git
 //
 //  Created by Later on 16/6/7.
 //  Copyright © 2016年 Later. All rights reserved.
