@@ -19,9 +19,6 @@
     return toVC.presentAnimationTimeInterval;
 }
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-    [self presentAnimateTransition:transitionContext];
-}
-- (void)presentAnimateTransition:(id<UIViewControllerContextTransitioning>)transitionContext  {
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     !toVC.LATTransitionPresentAnimationBlock ?: toVC.LATTransitionPresentAnimationBlock(transitionContext);
 }
@@ -35,9 +32,6 @@
     return fromVC.dismissAnimationTomeInterval;
 }
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-    [self dismissAnimateTransition:transitionContext];
-}
-- (void)dismissAnimateTransition:(id<UIViewControllerContextTransitioning>)transitionContext  {
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     !fromVC.LATTransitionDismissAnimationBlock ?: fromVC.LATTransitionDismissAnimationBlock(transitionContext);
 }
@@ -55,9 +49,73 @@
     return dismissTransition;
 }
 @end
+
+#pragma mark LATPushViewControllerTransition
+@interface LATPushViewControllerTransition : NSObject<UIViewControllerAnimatedTransitioning>
+@end
+@implementation LATPushViewControllerTransition
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
+    UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    return fromVC.pushAnimationTimeInterval;
+}
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
+    UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    !fromVC.LATTransitionPushAnimationBlock ?: fromVC.LATTransitionPushAnimationBlock(transitionContext);
+}
+@end
+#pragma mark LATPopViewControllerTransition
+@interface LATPopViewControllerTransition : NSObject<UIViewControllerAnimatedTransitioning>
+@end
+@implementation LATPopViewControllerTransition
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
+    UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    return toVC.popAnimationTimeInterval;
+}
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
+    UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    !toVC.LATTransitionPopAnimationBlock ?: toVC.LATTransitionPopAnimationBlock(transitionContext);
+}
+@end
+#pragma mark LATNavigationControllerDelegate
+@interface LATNavigationControllerDelegate : NSObject<UINavigationControllerDelegate>
+@end
+@implementation LATNavigationControllerDelegate
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
+    switch (operation) {
+        case UINavigationControllerOperationNone: {
+            nil;
+            break;
+        }
+        case UINavigationControllerOperationPush: {
+            return [[LATPushViewControllerTransition alloc] init];
+            break;
+        }
+        case UINavigationControllerOperationPop: {
+            return [[LATPopViewControllerTransition alloc] init];
+            break;
+        }
+    }
+    return nil;
+}
+//- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
+//    
+//}
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    !viewController.LATNavigationControllerWillShowBlock ?: viewController.LATNavigationControllerWillShowBlock(navigationController, viewController, animated);
+}
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    !viewController.LATNavigationControllerDidShowBlock ?: viewController.LATNavigationControllerDidShowBlock(navigationController, viewController, animated);
+}
+@end
+
+
+
+
+
 #pragma mark UIViewController+LATTransitionCategory
 @interface UIViewController ()
 @property (strong, nonatomic) LATViewControllerTransitionDelegate *latTransitionDelegate;
+@property (strong, nonatomic) LATNavigationControllerDelegate *latNavigationControllerDelegate;
 @end
 @implementation UIViewController (LATTransitionCategory)
 - (void (^)(id<UIViewControllerContextTransitioning>))LATTransitionPresentAnimationBlock {
@@ -116,5 +174,76 @@
 }
 - (void)setLAtTransitionDelegate:(LATViewControllerTransitionDelegate *)latTransitionDelegate {
     objc_setAssociatedObject(self, @selector(latTransitionDelegate), latTransitionDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+#pragma mark push/pop
+- (void (^)(id<UIViewControllerContextTransitioning>))LATTransitionPushAnimationBlock {
+    return objc_getAssociatedObject(self, _cmd);
+}
+- (void)setLATTransitionPushAnimationBlock:(void (^)(id<UIViewControllerContextTransitioning>))LATTransitionPushAnimationBlock {
+    if (!self.navigationController.delegate) {
+        self.navigationController.delegate = self.latNavigationControllerDelegate;
+    }
+    objc_setAssociatedObject(self, @selector(LATTransitionPushAnimationBlock), LATTransitionPushAnimationBlock, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (NSTimeInterval)pushAnimationTimeInterval {
+    NSTimeInterval pushTime = [objc_getAssociatedObject(self, _cmd) floatValue];
+    if (pushTime <= 0) {
+        pushTime = 0.5;
+        objc_setAssociatedObject(self, _cmd, @(pushTime), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return pushTime;
+}
+- (void)setPushAnimationTimeInterval:(NSTimeInterval)pushAnimationTimeInterval {
+    if (pushAnimationTimeInterval <= 0) {
+        return;
+    }
+    objc_setAssociatedObject(self, @selector(pushAnimationTimeInterval), @(pushAnimationTimeInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (void (^)(id<UIViewControllerContextTransitioning>))LATTransitionPopAnimationBlock {
+    return objc_getAssociatedObject(self, _cmd);
+}
+- (void)setLATTransitionPopAnimationBlock:(void (^)(id<UIViewControllerContextTransitioning>))LATTransitionPopAnimationBlock {
+    if (!self.navigationController.delegate) {
+        self.navigationController.delegate = self.latNavigationControllerDelegate;
+    }
+    objc_setAssociatedObject(self, @selector(LATTransitionPopAnimationBlock), LATTransitionPopAnimationBlock, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (NSTimeInterval)popAnimationTimeInterval {
+    NSTimeInterval popTime = [objc_getAssociatedObject(self, _cmd) floatValue];
+    if (popTime <= 0) {
+        popTime = 0.5;
+        objc_setAssociatedObject(self, _cmd, @(popTime), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return popTime;
+}
+- (void)setPopAnimationTimeInterval:(NSTimeInterval)popAnimationTimeInterval {
+    if (popAnimationTimeInterval <= 0) {
+        return;
+    }
+    objc_setAssociatedObject(self, @selector(popAnimationTimeInterval), @(popAnimationTimeInterval), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (void (^)(UINavigationController *, UIViewController *, BOOL))LATNavigationControllerWillShowBlock {
+    return objc_getAssociatedObject(self, _cmd);
+}
+- (void)setLATNavigationControllerWillShowBlock:(void (^)(UINavigationController *, UIViewController *, BOOL))LATNavigationControllerWillShowBlock {
+    objc_setAssociatedObject(self, @selector(LATNavigationControllerWillShowBlock), LATNavigationControllerWillShowBlock, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (void (^)(UINavigationController *, UIViewController *, BOOL))LATNavigationControllerDidShowBlock {
+    return objc_getAssociatedObject(self, _cmd);
+}
+- (void)setLATNavigationControllerDidShowBlock:(void (^)(UINavigationController *, UIViewController *, BOOL))LATNavigationControllerDidShowBlock {
+    objc_setAssociatedObject(self, @selector(LATNavigationControllerDidShowBlock), LATNavigationControllerDidShowBlock, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (LATNavigationControllerDelegate *)latNavigationControllerDelegate {
+    LATNavigationControllerDelegate *navigationDelegate = objc_getAssociatedObject(self, _cmd);
+    if (!navigationDelegate) {
+        navigationDelegate = [LATNavigationControllerDelegate new];
+        objc_setAssociatedObject(self, _cmd, navigationDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return navigationDelegate;
+}
+- (void)setLatNavigationControllerDelegate:(LATNavigationControllerDelegate *)latNavigationControllerDelegate {
+    objc_setAssociatedObject(self, @selector(latNavigationControllerDelegate), latNavigationControllerDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 @end
