@@ -6,7 +6,7 @@
 
 ### 【能做什么】
 
-* block方式设置`push`、`pop`、`present`、`dismissz`转场动画。
+* block方式设置`push`、`pop`、`present`、`dismiss`转场动画。
 * 属性方式设置`push`、`pop`、`present`、`dismiss`转场动画时间。
 
 ### 【导入】
