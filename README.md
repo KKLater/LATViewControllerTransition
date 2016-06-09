@@ -182,20 +182,22 @@ block方式设置pop转场过渡执行。可以为空，将不执行任何操作
 
 ### 【注意】
 
-* `present/dismiss`是对`toVC`进行设置;
+1、`present/dismiss`是对`toVC`进行设置;
 
-  `push/pop`相关设置是对`fromVC`进行设置。
+`push/pop`相关设置是对`fromVC`进行设置。
 
-  `willShowBlock\didShowBlock`可以对`toVC\fromVC`进行独立设置，仅在`push\pop`时有效。
+`willShowBlock\didShowBlock`可以对`toVC\fromVC`进行独立设置，仅在`push\pop`时有效。
+
+2、以下相关类似方法调用时的animated必须为YES，否则不执行相关界面切换过渡
+
+```objective-c
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (nullable UIViewController *)popViewControllerAnimated:(BOOL)animated;
+- (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion;
+- (void)dismissViewControllerAnimated: (BOOL)flag completion: (void (^ __nullable)(void))completion;
+```
 
 
-* ```objective-c
-  //以下相关类似方法调用时的animated必须为YES，否则不执行相关界面切换过渡
-  - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
-  - (nullable UIViewController *)popViewControllerAnimated:(BOOL)animated;
-  - (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion;
-  - (void)dismissViewControllerAnimated: (BOOL)flag completion: (void (^ __nullable)(void))completion;
-  ```
 
 ### 【期望】
 
@@ -203,6 +205,8 @@ block方式设置pop转场过渡执行。可以为空，将不执行任何操作
 
 
 * 2、这次封装没有涉及到交互动画，期望后期会加入交互动画的设置
+
+  ​
 
 ### 【联系方式】
 
